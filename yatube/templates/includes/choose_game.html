@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Выбор игры{% endblock %}
+{% block content %}
+<div class="d-grid gap-2 d-md-block">
+<a class="btn btn-primary btn-lg btn-block" href="{% url 'posts:game_first' %}">Игра 1</a>
+<a class="btn btn-primary btn-lg btn-block" href="{% url 'posts:game_second' %}">Игра 2</a>
+</div>
+{% endblock %}
