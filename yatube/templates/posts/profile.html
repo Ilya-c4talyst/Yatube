@@ -5,21 +5,21 @@
   <h3>Всего постов: {{ profile.posts.count }}</h3>
   <div class="container py-5" style="width: 200px;" >
   {% if profile != user %}
-  {% if following %}
-    <a
-      class="btn btn-lg btn-light"
-      href="{% url 'posts:profile_unfollow' profile.username %}" role="button"
-    >
-      Отписаться
-    </a>
-  {% else %}
-    <a
-      class="btn btn-lg btn-primary"
-      href="{% url 'posts:profile_follow' profile.username %}" role="button"
-    >
-      Подписаться
-    </a>
-  {%endif%}
+    {% if following %}
+      <a
+        class="btn btn-lg btn-light"
+        href="{% url 'posts:profile_unfollow' profile.username %}" role="button"
+      >
+        Отписаться
+      </a>
+    {% else %}
+      <a
+        class="btn btn-lg btn-primary"
+        href="{% url 'posts:profile_follow' profile.username %}" role="button"
+      >
+        Подписаться
+      </a>
+    {% endif %}
   {% endif %}
   </div>
   {% for post in page_obj %}  
