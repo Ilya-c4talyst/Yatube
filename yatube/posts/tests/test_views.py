@@ -10,7 +10,7 @@ from django.core.cache import cache
 
 
 from posts.models import Post, Group, User, Follow, Comment
-from posts.forms import PostForm
+from posts.forms import PostForm, CommentForm
 
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -174,6 +174,12 @@ class PostsViewsTests(TestCase):
         response = self.guest_client.get(
             reverse(name_url, kwargs=args)
         )
+        form_fields = {
+            'text': forms.fields.CharField,
+        }
+        form = response.context.get('form')
+        self.assertIsInstance(form, CommentForm)
+        self.assertIsInstance(form.fields['text'], form_fields['text'])
         self.context_check(response)
         self.assertEqual(response.context['comments'].first(), comment)
 

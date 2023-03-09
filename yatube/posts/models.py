@@ -85,12 +85,6 @@ class Comment(CreatedModel):
         ordering = ['-pub_date']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        constraints = [
-            UniqueConstraint(
-                fields=['post', 'author', 'text'],
-                name='unique_comments'
-            )
-        ]
 
 
 class Follow(models.Model):
