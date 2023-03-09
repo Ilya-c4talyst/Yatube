@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 
 from core.models import CreatedModel
 
@@ -56,6 +57,10 @@ class Group(models.Model):
         verbose_name='Описание группы'
     )
 
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
+
     def __str__(self) -> str:
         return self.title
 
@@ -76,19 +81,36 @@ class Comment(CreatedModel):
         help_text='Текст нового комментария'
     )
 
+    class Meta:
+        ordering = ['-pub_date']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        constraints = [
+            UniqueConstraint(
+                fields=['post', 'author', 'text'],
+                name='unique_comments'
+            )
+        ]
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
-        blank=True,
-        null=True,
         related_name='follower',
         on_delete=models.CASCADE
     )
     author = models.ForeignKey(
         User,
-        blank=True,
-        null=True,
         related_name='following',
         on_delete=models.CASCADE
     )
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            UniqueConstraint(
+                fields=['author', 'user'],
+                name='unique_follows'
+            )
+        ]

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% block title %}Записи избранных авторов{% endblock %}
 {% block content %}    
   <h1><b>Посты избранных авторов</b></h1>
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with follow=True %}
     {% for post in page_obj %}
       {% include 'includes/article.html' %}
       {% if not forloop.last %}

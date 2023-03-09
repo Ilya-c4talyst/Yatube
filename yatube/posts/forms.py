@@ -10,6 +10,7 @@ class PostForm(forms.ModelForm):
         help_texts = {
             'text': 'Напишите, о чем думаете',
             'group': 'Укажите группу',
+            'image': 'Выберите изображение'
         }
 
 

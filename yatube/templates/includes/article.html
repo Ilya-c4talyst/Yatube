@@ -17,10 +17,10 @@
       <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
     </li>
     {% if not group and post.group %}
-    <li>
-      <a href="{% url 'posts:group_list' post.group.slug %}">
-      <b>{{ post.group.title }}</b> - все записи группы</a>
-    </li>
+      <li>
+        <a href="{% url 'posts:group_list' post.group.slug %}">
+        <b>{{ post.group.title }}</b> - все записи группы</a>
+      </li>
     {% endif %}
   </ul>
 </article>

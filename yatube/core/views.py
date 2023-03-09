@@ -7,5 +7,10 @@ def page_not_found(request, exception):
 
 
 def csrf_failure(request, reason=''):
-    """Ошибка 403."""
+    """Ошибка csrf key."""
     return render(request, 'core/403csrf.html')
+
+
+def no_ability_to_watch(request, reason=''):
+    """Ошибка 403 (остутствие прав)."""
+    return render(request, 'core/403.html')

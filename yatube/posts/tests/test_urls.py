@@ -36,7 +36,9 @@ class StaticURLTests(TestCase):
             reverse('posts:post_create'):
             'posts/create_post.html',
             reverse('posts:post_edit', kwargs={'post_id': cls.post.id}):
-            'posts/create_post.html'
+            'posts/create_post.html',
+            reverse('posts:follow_index'):
+            'posts/follow.html',
         }
         cls.all_urls = {**cls.url_with_auth, **cls.url_without_auth}
 

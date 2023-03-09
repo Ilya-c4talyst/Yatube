@@ -9,7 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 
 
-from posts.models import Post, Group, User, Follow
+from posts.models import Post, Group, User, Follow, Comment
 from posts.forms import PostForm
 
 
@@ -74,8 +74,14 @@ class PostsViewsTests(TestCase):
                 {}
             ),
             'post_edit': (
-                'posts:post_edit', 'posts/create_post.html',
+                'posts:post_edit',
+                'posts/create_post.html',
                 {'post_id': cls.post.pk}
+            ),
+            'follow_index': (
+                'posts:follow_index',
+                'posts/follow.html',
+                {}
             ),
         }
 
@@ -155,14 +161,21 @@ class PostsViewsTests(TestCase):
         )
         self.context_check(response)
         self.assertEqual(response.context['profile'], PostsViewsTests.user)
+        self.assertFalse(response.context['following'])
 
     def test_post_detail_context(self):
         """Проверка контекста в post_detail."""
+        comment = Comment.objects.create(
+            post=self.post,
+            author=self.user,
+            text='Комментарий',
+        )
         name_url, _, args = PostsViewsTests.list_urls['post_detail']
         response = self.guest_client.get(
             reverse(name_url, kwargs=args)
         )
         self.context_check(response)
+        self.assertEqual(response.context['comments'].first(), comment)
 
     def test_create_post_context(self):
         """Проверка контекста в create_post."""
@@ -246,11 +259,12 @@ class PostsViewsTests(TestCase):
         self.authorized_client.get(
             reverse(
                 'posts:profile_follow',
-                kwargs={'username': 'content_maker'}
+                kwargs={'username': content_maker}
             )
         )
         following = Follow.objects.first()
         self.assertEqual(following.author, content_maker)
+        self.assertEqual(following.user, self.user)
 
     def test_posts_view_unfollow_authenticated(self):
         """Авторизованный пользователь может отписаться от автора."""
@@ -264,7 +278,7 @@ class PostsViewsTests(TestCase):
         self.authorized_client.get(
             reverse(
                 'posts:profile_unfollow',
-                kwargs={'username': 'content_maker'}
+                kwargs={'username': content_maker}
             )
         )
         following = Follow.objects.filter(
@@ -279,6 +293,15 @@ class PostsViewsTests(TestCase):
         )
         response = self.authorized_client.get(reverse('posts:follow_index'))
         self.context_check(response)
+
+    def unfollow_authors_is_not_in_page(self):
+        """Пост не попадает к пользователям, не подписанным на автора."""
+        new_post = Post.objects.create(
+            author=self.user,
+            text='Новая запись',
+        )
+        response = self.authorized_client.get(reverse('posts:follow_index'))
+        self.assertNotIn(new_post, response)
 
     def test_paginator(self):
         """Проверка паджинатора."""

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}    
   <h1><b>Последние обновления на сайте</b></h1>
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with index=True %}
     {% for post in page_obj %}
       {% include 'includes/article.html' %}
       {% if not forloop.last %}
